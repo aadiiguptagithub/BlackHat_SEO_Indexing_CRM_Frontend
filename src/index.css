@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Use solid HSL tokens or direct hex via utilities; keeping HSL for compatibility with shadcn-style tokens */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    /* Primary: #013763 (solid) */
+    /* HSL of #013763 ≈ 207 98% 20% */
+    --primary: 207 98% 20%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Secondary: #bd171f (solid) */
+    /* HSL of #bd171f ≈ 357 77% 42% */
+    --secondary: 357 77% 42%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 357 77% 42%; /* aligned to secondary for consistency */
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 357 77% 42%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 207 98% 20%; /* same as primary */
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    font-family: "Inter", sans-serif;
+  }
+
+  body {
+    @apply bg-gray-50 text-foreground antialiased;
+  }
+
+  /* Typography (no gradients) */
+  h1 {
+    @apply text-3xl font-bold tracking-tight text-gray-900;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold tracking-tight text-gray-800;
+  }
+
+  h3 {
+    @apply text-xl font-semibold tracking-tight text-gray-800;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight text-gray-800;
+  }
+
+  /* Solid color utilities (replace previous gradient helpers) */
+  .brand-primary {
+    @apply bg-[#013763];
+  }
+
+  .brand-secondary {
+    @apply bg-[#bd171f];
+  }
+
+  .brand-primary-text {
+    @apply text-[#013763];
+  }
+
+  .brand-secondary-text {
+    @apply text-[#bd171f];
+  }
+
+  .brand-primary-border {
+    @apply border-[#013763];
+  }
+
+  .brand-secondary-border {
+    @apply border-[#bd171f];
+  }
+
+  /* Buttons (solid) */
+  .btn-primary {
+    @apply bg-[#013763] text-white shadow-md hover:opacity-90 transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-[#bd171f] text-white shadow-md hover:opacity-90 transition-all duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 transition-colors;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden;
+  }
+
+  .card-header {
+    @apply bg-gray-50 px-6 py-4 border-b border-gray-200;
+  }
+
+  /* Custom scrollbars */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.gray.300") theme("colors.gray.100");
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400;
+  }
+
+  /* Table header (solid) */
+  .table-header {
+    @apply bg-gray-50 text-left text-sm font-medium text-gray-700;
+  }
+
+  /* Input fields with primary ring */
+  .input-field {
+    @apply border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#013763] focus:border-[#013763] outline-none transition-all duration-200;
+  }
+
+  /* Active nav item (solid) */
+  .nav-item-active {
+    @apply bg-[#013763] text-white shadow-md;
+  }
+
+  /* Badges (solid subtle) */
+  .badge-primary {
+    @apply bg-[#013763]/10 text-[#013763] text-xs font-medium px-2.5 py-0.5 rounded;
+  }
+
+  /* Status indicators (solid subtle) */
+  .status-active {
+    @apply bg-[#013763]/10 text-[#013763];
+  }
+
+  .status-pending {
+    @apply bg-[#bd171f]/10 text-[#bd171f];
+  }
+
+  /* Transitions */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Alerts (solid subtle) */
+  .alert-success {
+    @apply bg-[#013763]/10 text-[#013763] border border-[#013763]/20;
+  }
+
+  .alert-info {
+    @apply bg-[#bd171f]/10 text-[#bd171f] border border-[#bd171f]/20;
+  }
+}
