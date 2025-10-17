@@ -1,17 +1,38 @@
 import api from '../../lib/api';
+import { adaptJob, adaptSubmission, adaptPagination } from '../../lib/adapters';
 
 export const jobsAPI = {
   // Get all jobs
-  getJobs: (params = {}) => api.get('/jobs', { params }),
+  getJobs: async (params = {}) => {
+    const response = await api.get('/jobs', { params });
+    return {
+      ...response,
+      data: response.data?.map(adaptJob) || [],
+      pagination: adaptPagination(response.pagination || {})
+    };
+  },
   
   // Get job by ID
-  getJob: (id) => api.get(`/jobs/${id}`),
+  getJob: async (id) => {
+    const response = await api.get(`/jobs/${id}`);
+    return {
+      ...response,
+      data: response.data ? adaptJob(response.data) : null
+    };
+  },
   
   // Create new job
   createJob: (data) => api.post('/jobs', data),
   
   // Get job submissions
-  getJobSubmissions: (id, params = {}) => api.get(`/jobs/${id}/submissions`, { params }),
+  getJobSubmissions: async (id, params = {}) => {
+    const response = await api.get(`/jobs/${id}/submissions`, { params });
+    return {
+      ...response,
+      data: response.data?.map(adaptSubmission) || [],
+      pagination: adaptPagination(response.pagination || {})
+    };
+  },
   
   // Retry failed submissions
   retryFailed: (id, data = {}) => api.post(`/jobs/${id}/retry-failed`, data),
