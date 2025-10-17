@@ -1,60 +1,40 @@
-import axios from "axios";
+import axios from 'axios';
 
-export const BASE_URL = "";
+// Base URL for the Black Hat SEO API
+export const BASE_URL = 'http://localhost:4000/api';
 
-const axiosInstance = axios.create({
+// Create axios instance
+const api = axios.create({
   baseURL: BASE_URL,
+  timeout: 10000,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor
-axiosInstance.interceptors.request.use(
+// Request interceptor to add auth token
+api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor
-axiosInstance.interceptors.response.use(
+// Response interceptor for error handling
+api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Handle 401 Unauthorized errors
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      const refreshToken = localStorage.getItem("refreshToken");
-      if (refreshToken) {
-        try {
-          const response = await axios.post(`${BASE_URL}/auth/refresh-token`, {
-            refreshToken,
-          });
-
-          const { accessToken } = response.data;
-          localStorage.setItem("accessToken", accessToken);
-
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return axiosInstance(originalRequest);
-        } catch (refreshError) {
-          localStorage.clear();
-          window.location.href = "/login";
-          return Promise.reject(refreshError);
-        }
-      }
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
     }
-
     return Promise.reject(error);
   }
 );
 
-export default axiosInstance;
+export default api;
