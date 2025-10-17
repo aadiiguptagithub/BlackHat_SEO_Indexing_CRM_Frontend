@@ -1,42 +1,31 @@
-import axiosInstance from "../../config/axios";
+import api from "../../lib/api";
 
 export const authAPI = {
   login: async (credentials) => {
-    const response = await axiosInstance.post("/api/login", credentials);
-    return response.data;
+    return await api.post("/login", credentials);
   },
 
   verifyOTP: async (data) => {
-    const response = await axiosInstance.post("/api/verify-otp", data);
-    return response.data;
+    return await api.post("/verify-otp", data);
   },
 
   forgotPassword: async (email) => {
-    const response = await axiosInstance.post("/api/forgot-password", {
-      email,
-    });
-    return response.data;
+    return await api.post("/forgot-password", { email });
   },
 
   verifyPasswordOTP: async (data) => {
-    const response = await axiosInstance.post("/api/verify-password-otp", data);
-    return response.data;
+    return await api.post("/verify-password-otp", data);
   },
 
   resetPassword: async (data) => {
-    const response = await axiosInstance.post("/api/reset-password", data);
-    return response.data;
+    return await api.post("/reset-password", data);
   },
 
   refreshToken: async (refreshToken) => {
-    const response = await axiosInstance.post("/api/refresh-token", {
-      refreshToken,
-    });
-    return response.data;
+    return await api.post("/refresh-token", { refreshToken });
   },
 
   resendOTP: async (data) => {
-    const response = await axiosInstance.post("/api/resend-otp", data);
-    return response.data;
+    return await api.post("/resend-otp", data);
   },
 };

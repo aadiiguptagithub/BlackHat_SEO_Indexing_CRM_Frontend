@@ -1,4 +1,4 @@
-import api from './index';
+import api from '../../lib/api';
 
 export const websitesAPI = {
   // Get all websites
