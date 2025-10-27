@@ -12,13 +12,13 @@ import {
   Cell,
 } from "recharts";
 
-export function SalesChart({ lineData, pieData }) {
+export function SalesChart({ lineData, pieData, activeRange = 'last7Days' }) {
   // Fallback for empty data
   const displayLineData =
-    lineData?.length > 0 ? lineData : [{ month: "No data", orders: 0 }];
+    lineData?.length > 0 ? lineData : [{ day: "No data", submissions: 0, target: 0 }];
 
   const displayPieData =
-    pieData?.length > 0
+    pieData?.length > 0 && pieData.some(item => item.value > 0)
       ? pieData
       : [{ name: "No data", value: 100, color: "#cccccc" }];
 
@@ -28,9 +28,11 @@ export function SalesChart({ lineData, pieData }) {
       <Card className="lg:col-span-3 bg-white p-6">
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-[#013763]">
-            7-Day Fuel Consumption
+            {activeRange === 'today' ? 'Today\'s Hourly Trend' : 'Submissions Trend'}
           </h3>
-          <p className="text-sm text-gray-500">Daily fuel usage vs target</p>
+          <p className="text-sm text-gray-500">
+            {activeRange === 'today' ? 'Hourly submissions vs target' : 'Daily submissions vs target'}
+          </p>
         </div>
         <div className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -45,10 +47,10 @@ export function SalesChart({ lineData, pieData }) {
               <Tooltip />
               <Line
                 type="monotone"
-                dataKey="consumption"
+                dataKey="submissions"
                 stroke="#013763"
                 strokeWidth={2}
-                name="Consumption (L)"
+                name="Submissions"
               />
               <Line
                 type="monotone"
@@ -56,7 +58,7 @@ export function SalesChart({ lineData, pieData }) {
                 stroke="#bd171f"
                 strokeWidth={2}
                 strokeDasharray="5 5"
-                name="Target (L)"
+                name="Target"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -67,9 +69,9 @@ export function SalesChart({ lineData, pieData }) {
       <Card className="bg-white p-6">
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-[#013763]">
-            Vehicle Efficiency
+            Submission Status
           </h3>
-          <p className="text-sm text-gray-500">KM/L by vehicle</p>
+          <p className="text-sm text-gray-500">Status breakdown</p>
         </div>
         <div className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">

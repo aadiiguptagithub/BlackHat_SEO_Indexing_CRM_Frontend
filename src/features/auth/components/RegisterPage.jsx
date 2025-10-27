@@ -3,37 +3,34 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link } from "react-router-dom";
-import { Mail, Lock, EyeOff, Eye } from "lucide-react";
+import { Mail, Lock, User, EyeOff, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
-
-const loginSchema = z.object({
+const registerSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export function LoginPage() {
+export function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const { register: registerUser } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(registerSchema),
   });
 
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      await login({
-        email: data.email,
-        password: data.password,
-      });
+      await registerUser(data);
     } catch (error) {
       // Error handling is managed in AuthContext
     } finally {
@@ -49,12 +46,27 @@ export function LoginPage() {
             Black Hat SEO
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Please sign in to continue
+            Create your account
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
           <div className="space-y-4">
+            <div className="relative">
+              <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <Input
+                {...register("name")}
+                type="text"
+                placeholder="Full name"
+                className="pl-10 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-[#013763]"
+              />
+              {errors.name && (
+                <span className="text-sm text-red-500 mt-1">
+                  {errors.name.message}
+                </span>
+              )}
+            </div>
+
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
@@ -97,50 +109,22 @@ export function LoginPage() {
             </div>
           </div>
 
-
-
           <Button
             type="submit"
             disabled={isLoading}
             className="w-full bg-[#013763] hover:bg-[#001f3f] text-white py-2 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
           >
-            {isLoading ? (
-              <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                Signing in...
-              </>
-            ) : (
-              "Sign In"
-            )}
+            {isLoading ? "Creating account..." : "Create Account"}
           </Button>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <Link
-                to="/register"
+                to="/login"
                 className="font-medium text-[#013763] hover:text-[#001f3f]"
               >
-                Sign up
+                Sign in
               </Link>
             </p>
           </div>

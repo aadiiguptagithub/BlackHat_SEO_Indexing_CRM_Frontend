@@ -5,9 +5,15 @@ export const submissionsAPI = {
   // Claim next submission (worker endpoint)
   claimNext: async (lease = 120) => {
     const response = await api.get(`/submissions/next?lease=${lease}`);
+    console.log('Claim next raw response:', response);
+    if (!response.success || !response.data) {
+      return { success: false, data: null, message: response.message || 'No submissions available' };
+    }
+    const adapted = adaptSubmission(response.data);
+    console.log('Adapted submission:', adapted);
     return {
-      ...response,
-      data: response.data ? adaptSubmission(response.data) : null
+      success: true,
+      data: adapted
     };
   },
   
@@ -23,5 +29,8 @@ export const submissionsAPI = {
     status: 'failed',
     error,
     logs
-  })
+  }),
+  
+  // Delete submission
+  deleteSubmission: (id) => api.delete(`/submissions/${id}`)
 };

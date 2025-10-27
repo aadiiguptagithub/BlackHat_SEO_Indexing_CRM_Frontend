@@ -57,14 +57,19 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     try {
-      const response = await api.post("/login", credentials);
+      const response = await api.post("/auth/login", credentials);
 
       if (response.success) {
-        const token = response.data?.token || `user-${response.data?.user_id}`;
-        const userData = response.data?.user || { email: credentials.email, id: response.data?.user_id };
-        
-        setAuth(token, userData);
+        const { token, user } = response.data;
+        setAuth(token, user);
         navigate("/dashboard");
+        
+        toast({
+          title: "Success",
+          description: "Login successful!",
+          variant: "default",
+        });
+        
         return response;
       }
       throw new Error(response.message || "Login failed");
@@ -72,6 +77,34 @@ export function AuthProvider({ children }) {
       toast({
         title: "Error",
         description: error.message || "Invalid credentials",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const register = async (userData) => {
+    try {
+      const response = await api.post("/auth/register", userData);
+
+      if (response.success) {
+        const { token, user } = response.data;
+        setAuth(token, user);
+        navigate("/dashboard");
+        
+        toast({
+          title: "Success",
+          description: "Registration successful!",
+          variant: "default",
+        });
+        
+        return response;
+      }
+      throw new Error(response.message || "Registration failed");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message || "Registration failed",
         variant: "destructive",
       });
       throw error;
@@ -128,6 +161,7 @@ export function AuthProvider({ children }) {
     isLoading,
     isAuthenticated,
     login,
+    register,
     loginWithApiKey,
     logout,
     setAuth,

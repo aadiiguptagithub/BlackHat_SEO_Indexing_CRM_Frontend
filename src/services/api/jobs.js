@@ -29,7 +29,7 @@ export const jobsAPI = {
     const response = await api.get(`/jobs/${id}/submissions`, { params });
     return {
       ...response,
-      data: response.data?.map(adaptSubmission) || [],
+      data: response.data?.data?.map(adaptSubmission) || response.data?.map(adaptSubmission) || [],
       pagination: adaptPagination(response.pagination || {})
     };
   },
@@ -40,6 +40,12 @@ export const jobsAPI = {
   // Cancel job
   cancelJob: (id) => api.post(`/jobs/${id}/cancel`),
   
+  // Recompute counts
+  recomputeCounts: (id) => api.post(`/jobs/${id}/recompute-counts`),
+  
   // Export job data
-  exportJob: (id) => api.get(`/jobs/${id}/export.csv`, { responseType: 'blob' })
+  exportJob: (id) => api.get(`/jobs/${id}/export.csv`, { responseType: 'blob' }),
+  
+  // Delete job
+  deleteJob: (id) => api.delete(`/jobs/${id}`)
 };

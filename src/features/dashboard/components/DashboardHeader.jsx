@@ -25,9 +25,16 @@ export function DashboardHeader({
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
       {/* Dashboard Title */}
-      <h1 className="text-2xl font-semibold text-[#013763] mb-4">
-        Dashboard Overview
-      </h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-semibold text-[#013763]">
+          Black Hat SEO Dashboard
+        </h1>
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-500">
+            Welcome back! Monitor your SEO campaigns and submissions.
+          </div>
+        </div>
+      </div>
 
       {/* Filters Row - now with no wrapping and no scroll */}
       <div className="flex items-center space-x-2">
