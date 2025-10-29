@@ -28,9 +28,15 @@ export default function BulkUploadModal({ isOpen, onClose, onUploaded }) {
         .split(/[,\n]+/)
         .map(s => s.trim())
         .filter(Boolean)
+        .map(url => {
+          if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return `https://${url}`;
+          }
+          return url;
+        })
         .filter(url => {
           try {
-            new URL(url.startsWith('http') ? url : `https://${url}`);
+            new URL(url);
             return true;
           } catch {
             return false;
@@ -39,6 +45,7 @@ export default function BulkUploadModal({ isOpen, onClose, onUploaded }) {
 
       if (urls.length === 0) {
         toast({ title: 'Error', description: 'No valid URLs found', variant: 'destructive' });
+        setUploading(false);
         return;
       }
 
@@ -51,7 +58,10 @@ export default function BulkUploadModal({ isOpen, onClose, onUploaded }) {
           title: 'Upload successful', 
           description: `Added ${data.inserted || 0} websites, ${data.duplicates || 0} duplicates skipped` 
         });
-        onUploaded && onUploaded(data);
+        setUrlsText('');
+        if (onUploaded) {
+          await onUploaded(data);
+        }
         onClose();
       } else {
         toast({ title: 'Error', description: res.message || 'Upload failed', variant: 'destructive' });

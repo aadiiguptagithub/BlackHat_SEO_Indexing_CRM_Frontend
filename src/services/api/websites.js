@@ -15,6 +15,9 @@ export const websitesAPI = {
   // Bulk upload websites
   bulkUpload: (data) => api.post('/websites/bulk', data),
   
+  // Toggle website status
+  toggleStatus: (id) => api.patch(`/websites/${id}/toggle-status`),
+  
   // Delete website
   deleteWebsite: (id) => api.delete(`/websites/${id}`)
 };

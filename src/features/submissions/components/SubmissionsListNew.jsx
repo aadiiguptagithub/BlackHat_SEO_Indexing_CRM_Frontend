@@ -147,12 +147,10 @@ export default function SubmissionsList({ jobId: propJobId }) {
           <h2 className="text-2xl font-bold text-gray-900">Submission Management</h2>
           <p className="text-gray-600 mt-1">Track and monitor your SEO submission results</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={loadSubmissions} disabled={loading}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
-        </div>
+        <Button variant="outline" onClick={loadSubmissions} disabled={loading}>
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Refresh
+        </Button>
       </div>
 
       {/* Stats */}
@@ -160,7 +158,7 @@ export default function SubmissionsList({ jobId: propJobId }) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <FaCheckCircle className="w-8 h-8 text-[#013763]" />
+              <FaCheckCircle className="w-8 h-8 text-green-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Successful</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -173,7 +171,7 @@ export default function SubmissionsList({ jobId: propJobId }) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <FaTimesCircle className="w-8 h-8 text-[#013763]" />
+              <FaTimesCircle className="w-8 h-8 text-red-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Failed</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -186,7 +184,7 @@ export default function SubmissionsList({ jobId: propJobId }) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <FaSpinner className="w-8 h-8 text-[#013763]" />
+              <FaSpinner className="w-8 h-8 text-blue-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Running</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -199,7 +197,7 @@ export default function SubmissionsList({ jobId: propJobId }) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <FaClock className="w-8 h-8 text-[#013763]" />
+              <FaClock className="w-8 h-8 text-yellow-600" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Pending</p>
                 <p className="text-2xl font-bold text-gray-900">

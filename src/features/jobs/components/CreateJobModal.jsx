@@ -43,7 +43,14 @@ export default function CreateJobModal({ isOpen, onClose, onCreated }) {
         const websitesData = response.data?.data || response.data || [];
         const validWebsites = Array.isArray(websitesData) ? websitesData : [];
         setWebsites(validWebsites);
+        
+        // Pre-select all active websites
+        const activeWebsites = validWebsites.filter(w => w.isActive !== false);
+        const activeIds = activeWebsites.map(w => w._id || w.id).join(',');
+        setWebsiteIds(activeIds);
+        
         console.log('Loaded websites:', validWebsites);
+        console.log('Pre-selected active websites:', activeIds);
       } else {
         console.error('API returned success: false', response);
         setWebsites([]);

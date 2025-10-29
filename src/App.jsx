@@ -8,6 +8,7 @@ import { Dashboard } from "./features/dashboard/Dashboard";
 import { JobsList } from "./features/jobs";
 import { WebsitesList } from "./features/websites";
 import { SubmissionsList } from "./features/submissions";
+import SubmissionDetail from "./features/submissions/components/SubmissionDetail";
 import { Toaster } from "./components/toaster";
 
 
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="jobs" element={<JobsList />} />
             <Route path="websites" element={<WebsitesList />} />
             <Route path="submissions" element={<SubmissionsList />} />
+            <Route path="submissions/:id" element={<SubmissionDetail />} />
           </Route>
         </Routes>
         <Toaster />

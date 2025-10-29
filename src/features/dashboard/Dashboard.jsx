@@ -29,10 +29,12 @@ export function Dashboard() {
   const [recentJobs, setRecentJobs] = useState([]);
   const [submissionsData, setSubmissionsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [jobsPage, setJobsPage] = useState(1);
+  const [totalJobs, setTotalJobs] = useState(0);
 
   useEffect(() => {
     fetchDashboardData();
-  }, [dateRange]);
+  }, [dateRange, jobsPage]);
 
   const fetchDashboardData = async () => {
     try {
@@ -53,14 +55,11 @@ export function Dashboard() {
       }
       
       try {
-        const jobsRes = await api.get('/jobs?limit=10');
+        const jobsRes = await api.get(`/jobs?page=${jobsPage}&limit=5`);
         if (jobsRes.success) {
-          const allJobs = jobsRes.data.data || [];
-          const filteredJobs = allJobs.filter(job => {
-            const jobDate = new Date(job.createdAt);
-            return jobDate >= dateRange.startDate && jobDate <= dateRange.endDate;
-          }).slice(0, 5);
-          setRecentJobs(filteredJobs);
+          const allJobs = jobsRes.data.data || jobsRes.data || [];
+          setRecentJobs(allJobs);
+          setTotalJobs(jobsRes.data.pagination?.total || allJobs.length);
           
           const allSubmissions = [];
           for (const job of allJobs.slice(0, 3)) {
@@ -266,7 +265,7 @@ export function Dashboard() {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Recent Jobs</h3>
               <span className="text-sm text-gray-500">
-                {recentJobs.length} jobs in selected period
+                Showing {recentJobs.length} of {totalJobs} jobs
               </span>
             </div>
             <div className="overflow-x-auto">
@@ -275,15 +274,16 @@ export function Dashboard() {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job Name</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Success</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Failed</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {recentJobs.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
-                        No jobs found in the selected date range
+                      <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                        No jobs found
                       </td>
                     </tr>
                   ) : (
@@ -302,8 +302,11 @@ export function Dashboard() {
                             {job.status || 'unknown'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {job.counts ? `${job.counts.success || 0}/${job.counts.total || 0}` : '0/0'}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
+                          {job.counts?.success || 0}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium">
+                          {job.counts?.failed || 0}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'Unknown'}
@@ -314,6 +317,29 @@ export function Dashboard() {
                 </tbody>
               </table>
             </div>
+            {totalJobs > 5 && (
+              <div className="flex items-center justify-between mt-4 pt-4 border-t">
+                <div className="text-sm text-gray-600">
+                  Page {jobsPage} of {Math.ceil(totalJobs / 5)}
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setJobsPage(p => Math.max(1, p - 1))}
+                    disabled={jobsPage === 1}
+                    className="px-3 py-1 text-sm border rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => setJobsPage(p => Math.min(Math.ceil(totalJobs / 5), p + 1))}
+                    disabled={jobsPage >= Math.ceil(totalJobs / 5)}
+                    className="px-3 py-1 text-sm border rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

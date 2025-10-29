@@ -88,7 +88,7 @@ export function MainLayout() {
                 className={cn(
                   "flex items-center gap-x-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                   isActive
-                    ? "bg-blue-600 text-white shadow-md"
+                    ? "bg-[#013763] text-white shadow-md"
                     : "text-gray-600 hover:bg-gray-50",
                   isCollapsed && "justify-center"
                 )}
